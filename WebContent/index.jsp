@@ -17,11 +17,17 @@
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
       #map-canvas { height: 100% }
+      .iwContainer { 
+		  width: 120px; 
+		  height: 40px; 
+		} 
     </style>
 
     <script type="text/javascript">
     
     var map = null;
+    var markersArray = [];
+    var infoWindowsArray = [];
     
       function initialize() {
     	  console.log( "initialize" );
@@ -66,6 +72,8 @@
       
       function showMarkers(data) {
     	  
+    	  clearOverlays();
+    	  
     	 $.each( data.markers, function(i, mInfo) {
     		  var myLatlng = new google.maps.LatLng(mInfo.lat,mInfo.lng);
     		  //var myLatlng = new google.maps.LatLng(32.985494,-96.750948);
@@ -76,22 +84,40 @@
     		      title: "parking"
     		  });
     		  
-    		  // DEVELOPER NOTE: Google Info BUG. Using space in content doesn't show info box well
-    		  //var infoContent = "<div id='content'>Spot Number:" + mInfo.id + "</div>";
-    		  var infoContent = "Spot:" + mInfo.id + "";
+    		  markersArray.push(marker);
+    		  
+    		  // DEVELOPER NOTE: Google Info BUG. It won't show small info windows; so, I defined iwContainer css class
+    		  var infoContent = "<div class='iwContainer'>Spot:" + mInfo.spotNumber + "</div>";
+    		  //var infoContent = "Spot:" + mInfo.spotNumber + "";
     		  
         	  var infowindow = new google.maps.InfoWindow({
         	      content: infoContent
         	  });
+        	  infoWindowsArray.push(infowindow);
 
         	  google.maps.event.addListener(marker, 'click', function() {
         		    infowindow.open(map,marker);
+        		    //TODO: close all other info windows
+        		    //for(var i = 0; i < infoWindowsArray.length; i++) {
+        		    //	infoWindowsArray[i].close();
+        		   	//}
         		  });
     		  
     		  
 			}); 
       }
       
+   // Removes the overlays from the map, but keeps them in the array
+      function clearOverlays() {
+
+	    for (var i = 0; i < markersArray.length; i++) {
+           markersArray[i].setMap(null);
+         }
+         markersArray = [];
+         infoWindowsArray = [];
+      }
+
+   
       
       google.maps.event.addDomListener(window, 'load', initialize);
 

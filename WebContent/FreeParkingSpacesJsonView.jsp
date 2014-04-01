@@ -1,11 +1,9 @@
 <%@ page language="java" contentType="application/json; charset=UTF-8"
-    pageEncoding="utf-8"%><%@ page import="java.util.List" %><%@ page import="CometPark.ParkingSpaceController" %><%
+    pageEncoding="utf-8"%><%@ page import="java.util.List" %><%@ page import="CometPark.ParkingSpotController" %><%String msg = "";
 
-String msg = "";
+    response.setHeader("Cache-Control","no-cache, no-store, must-revalidate"); 
+    response.setHeader("Expires", "Sat, 6 May 1995 12:00:00 GMT");
+    response.setHeader("Pragma","no-cache"); 
 
-
-ParkingSpaceController c = new ParkingSpaceController();
-msg = c.FindFreeParkingSpacesJson();
-
-
-%><%= msg %>
+ParkingSpotController c = new ParkingSpotController();
+msg = c.findFreeParkingSpacesJson();%><%= msg %>

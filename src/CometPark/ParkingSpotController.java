@@ -27,7 +27,7 @@ public class ParkingSpotController extends ControllerBase {
 		{
 			OpenConnection();
 			
-			String sql = "SELECT * FROM ParkingSpot Where IsVacant = 1"; // TODO: Add LastUpdate > now() - one hour
+			String sql = "SELECT * FROM parkingspot Where IsVacant = 1"; // TODO: Add LastUpdate > now() - one hour
 			ResultSet rs = getStatement().executeQuery(sql);
 			ArrayList<ParkingSpot> list = createListByResultSet(rs);
 			rs.close();
@@ -48,7 +48,7 @@ public class ParkingSpotController extends ControllerBase {
 		{
 			OpenConnection();
 			
-			String sql = "SELECT * FROM ParkingSpot";
+			String sql = "SELECT * FROM parkingspot";
 			ResultSet rs = getStatement().executeQuery(sql);
 			ArrayList<ParkingSpot> list = createListByResultSet(rs);
 			rs.close();
@@ -68,7 +68,7 @@ public class ParkingSpotController extends ControllerBase {
 		{
 			OpenConnection();
 			
-			String sql = "SELECT * FROM ParkingSpot Where ParkingSpotId = " + parkingSpotId;
+			String sql = "SELECT * FROM parkingspot Where ParkingSpotId = " + parkingSpotId;
 			ResultSet rs = getStatement().executeQuery(sql);
 			ArrayList<ParkingSpot> list = createListByResultSet(rs);
 			rs.close();

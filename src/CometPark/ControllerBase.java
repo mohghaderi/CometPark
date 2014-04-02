@@ -11,13 +11,24 @@ import CometPark.models.ParkingLot;
 
 public abstract class ControllerBase {
 
-   // JDBC driver name and database URL
-   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-   static final String DB_URL = "jdbc:mysql://localhost/cometpark";
+//   // JDBC driver name and database URL
+//   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+//   static final String DB_URL = "jdbc:mysql://localhost/cometpark";
+//
+//   //  Database credentials
+//   static final String USER = "root";
+//   static final String PASS = "";
+	
+	
+	   // JDBC driver name and database URL
+	   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+	   static final String DB_URL = "jdbc:mysql://localhost/cometpark";
 
-   //  Database credentials
-   static final String USER = "root";
-   static final String PASS = "";
+	   //  Database credentials
+	   static final String USER = "asepdgroupd";
+	   static final String PASS = "groupd";
+	
+	
    
    private Connection conn = null;
    private Statement stmt = null;

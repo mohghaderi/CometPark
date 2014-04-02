@@ -16,7 +16,7 @@ public class ParkingLotController extends ControllerBase {
 		{
 			OpenConnection();
 			
-			String sql = "SELECT * FROM ParkingLot";
+			String sql = "SELECT * FROM parkinglot";
 			ResultSet rs = getStatement().executeQuery(sql);
 			ArrayList<ParkingLot> list = createListByResultSet(rs);
 			rs.close();

@@ -3,7 +3,7 @@
 -- Server version:               5.5.27 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL version:             7.0.0.4208
--- Date/time:                    2014-04-08 22:36:38
+-- Date/time:                    2014-04-11 18:17:22
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -17,6 +17,7 @@ USE `cometpark`;
 
 
 -- Dumping structure for table cometpark.controller
+DROP TABLE IF EXISTS `controller`;
 CREATE TABLE IF NOT EXISTS `controller` (
   `ControllerId` int(10) NOT NULL,
   `LastLiveUpdate` datetime NOT NULL,
@@ -25,12 +26,15 @@ CREATE TABLE IF NOT EXISTS `controller` (
   PRIMARY KEY (`ControllerId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table cometpark.controller: ~0 rows (approximately)
+-- Dumping data for table cometpark.controller: ~1 rows (approximately)
 /*!40000 ALTER TABLE `controller` DISABLE KEYS */;
+INSERT INTO `controller` (`ControllerId`, `LastLiveUpdate`, `Lat`, `Lng`) VALUES
+	(1, '2014-04-11 14:40:36', 0, 0);
 /*!40000 ALTER TABLE `controller` ENABLE KEYS */;
 
 
 -- Dumping structure for table cometpark.parkinglot
+DROP TABLE IF EXISTS `parkinglot`;
 CREATE TABLE IF NOT EXISTS `parkinglot` (
   `ParkingLotId` int(10) NOT NULL,
   `ParkingLotName` varchar(50) NOT NULL,
@@ -49,6 +53,7 @@ INSERT INTO `parkinglot` (`ParkingLotId`, `ParkingLotName`, `CenterLat`, `Center
 
 
 -- Dumping structure for table cometpark.parkingspot
+DROP TABLE IF EXISTS `parkingspot`;
 CREATE TABLE IF NOT EXISTS `parkingspot` (
   `ParkingSpotId` int(10) NOT NULL,
   `ParkingLotId` int(10) NOT NULL,
@@ -61,31 +66,31 @@ CREATE TABLE IF NOT EXISTS `parkingspot` (
   PRIMARY KEY (`ParkingSpotId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table cometpark.parkingspot: ~4 rows (approximately)
+-- Dumping data for table cometpark.parkingspot: ~308 rows (approximately)
 /*!40000 ALTER TABLE `parkingspot` DISABLE KEYS */;
 INSERT INTO `parkingspot` (`ParkingSpotId`, `ParkingLotId`, `SpotNumber`, `PermitLevelId`, `Lat`, `Lng`, `IsVacant`, `LastUpdate`) VALUES
-	(1, 2, 101, 1, 32.986393, -96.753602, 1, '2014-04-08 20:47:10'),
-	(2, 2, 102, 1, 32.986393, -96.75358, 1, '2014-04-08 20:47:10'),
+	(1, 2, 101, 1, 32.986393, -96.753602, 0, '2014-04-08 20:47:10'),
+	(2, 2, 102, 1, 32.986393, -96.75358, 1, '2014-04-11 13:36:40'),
 	(3, 2, 103, 1, 32.986393, -96.753549, 1, '2014-04-08 20:47:10'),
 	(4, 2, 104, 1, 32.986393, -96.753519, 1, '2014-04-08 20:47:10'),
 	(5, 2, 105, 1, 32.986393, -96.753488, 1, '2014-04-08 20:47:10'),
 	(6, 2, 106, 1, 32.986393, -96.753459, 1, '2014-04-08 20:47:10'),
 	(7, 2, 107, 1, 32.986393, -96.753431, 1, '2014-04-08 20:47:11'),
 	(8, 2, 108, 1, 32.986393, -96.753401, 1, '2014-04-08 20:47:11'),
-	(9, 2, 109, 1, 32.986393, -96.753373, 1, '2014-04-08 20:47:11'),
+	(9, 2, 109, 1, 32.986393, -96.753373, 0, '2014-04-08 20:47:11'),
 	(10, 2, 110, 1, 32.986393, -96.753344, 1, '2014-04-08 20:47:11'),
 	(11, 2, 111, 1, 32.986393, -96.753314, 1, '2014-04-08 20:47:11'),
 	(12, 2, 112, 1, 32.986393, -96.753285, 1, '2014-04-08 20:47:11'),
 	(13, 2, 113, 1, 32.986393, -96.753256, 1, '2014-04-08 20:47:12'),
 	(14, 2, 114, 1, 32.986393, -96.753226, 1, '2014-04-08 20:47:12'),
-	(15, 2, 115, 1, 32.986393, -96.753196, 1, '2014-04-08 20:47:12'),
+	(15, 2, 115, 1, 32.986393, -96.753196, 0, '2014-04-08 20:47:12'),
 	(16, 2, 116, 1, 32.986393, -96.753168, 1, '2014-04-08 20:47:12'),
 	(17, 2, 117, 1, 32.986393, -96.753137, 1, '2014-04-08 20:47:12'),
 	(18, 2, 118, 1, 32.986393, -96.753112, 1, '2014-04-08 20:47:12'),
 	(19, 2, 119, 1, 32.986393, -96.753081, 1, '2014-04-08 20:47:12'),
 	(20, 2, 120, 1, 32.986393, -96.753054, 1, '2014-04-08 20:47:13'),
-	(21, 2, 121, 1, 32.986393, -96.753023, 1, '2014-04-08 20:47:13'),
-	(22, 2, 122, 1, 32.986393, -96.75299, 1, '2014-04-08 20:47:13'),
+	(21, 2, 121, 1, 32.986393, -96.753023, 0, '2014-04-08 20:47:13'),
+	(22, 2, 122, 1, 32.986393, -96.75299, 0, '2014-04-08 20:47:13'),
 	(23, 2, 123, 1, 32.986393, -96.752963, 1, '2014-04-08 20:47:13'),
 	(24, 2, 124, 1, 32.986393, -96.752933, 1, '2014-04-08 20:47:13'),
 	(25, 2, 125, 1, 32.986393, -96.752902, 1, '2014-04-08 20:47:13'),
@@ -376,21 +381,45 @@ INSERT INTO `parkingspot` (`ParkingSpotId`, `ParkingLotId`, `SpotNumber`, `Permi
 
 
 -- Dumping structure for table cometpark.permitlevel
+DROP TABLE IF EXISTS `permitlevel`;
 CREATE TABLE IF NOT EXISTS `permitlevel` (
   `PermitLevelId` int(10) NOT NULL,
   `PermitLevelName` varchar(50) NOT NULL,
   PRIMARY KEY (`PermitLevelId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table cometpark.permitlevel: ~5 rows (approximately)
+-- Dumping data for table cometpark.permitlevel: ~6 rows (approximately)
 /*!40000 ALTER TABLE `permitlevel` DISABLE KEYS */;
 INSERT INTO `permitlevel` (`PermitLevelId`, `PermitLevelName`) VALUES
 	(1, 'Visitor'),
 	(2, 'Green'),
 	(3, 'Gold'),
 	(4, 'Orange'),
-	(5, 'Purple');
+	(5, 'Purple'),
+	(6, 'Handycap');
 /*!40000 ALTER TABLE `permitlevel` ENABLE KEYS */;
+
+
+-- Dumping structure for table cometpark.sensorlog
+DROP TABLE IF EXISTS `sensorlog`;
+CREATE TABLE IF NOT EXISTS `sensorlog` (
+  `LogId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `LogDate` datetime NOT NULL,
+  `SensorId` int(10) NOT NULL,
+  `NewIsVacant` tinyint(1) NOT NULL,
+  PRIMARY KEY (`LogId`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table cometpark.sensorlog: ~6 rows (approximately)
+/*!40000 ALTER TABLE `sensorlog` DISABLE KEYS */;
+INSERT INTO `sensorlog` (`LogId`, `LogDate`, `SensorId`, `NewIsVacant`) VALUES
+	(1, '2014-04-11 12:47:49', 1, 0),
+	(2, '2014-04-11 12:48:01', 1, 1),
+	(3, '2014-04-11 13:34:53', 2, 0),
+	(4, '2014-04-11 13:34:53', 2, 1),
+	(5, '2014-04-11 13:36:40', 2, 0),
+	(6, '2014-04-11 13:36:40', 2, 1);
+/*!40000 ALTER TABLE `sensorlog` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

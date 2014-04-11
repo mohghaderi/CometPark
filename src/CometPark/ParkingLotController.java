@@ -42,6 +42,8 @@ public class ParkingLotController extends ControllerBase {
 	    	 item.setParkingLotName(rs.getString("ParkingLotName"));
 	    	 item.setCenterLat(rs.getDouble("CenterLat"));
 	    	 item.setCenterLng(rs.getDouble("CenterLng"));
+	    	 
+	    	 list.add(item);
 	      }
 		return list;
 	}

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import CometPark.models.ParkingLot;
 import CometPark.models.ParkingSpot;
+import CometPark.models.SensorLog;
 
 public class ParkingSpotController extends ControllerBase {
 	
@@ -18,6 +19,10 @@ public class ParkingSpotController extends ControllerBase {
 		return convertArrayListParkingSpaceToJson(list);
 	}
 	
+	public String getAllParkingSpacesJson() throws Exception {
+		ArrayList<ParkingSpot> list = getList();
+		return convertArrayListParkingSpaceToJson(list);
+	}
 	
 
 	
@@ -114,22 +119,20 @@ public class ParkingSpotController extends ControllerBase {
 	{
 		try	
 		{
-			String sql = "Update parkingspot set isVacant = ?, LastUpdate = ? Where ParkingSpotId = ?";
-			//String sql = "Update parkingspot set isVacant = ? Where ParkingSpotId = ?";
+			//TODO: add transaction here. Make sure that both actions are in the same transaction
 			
-			byte isVacantInt = 0;
-			if (isVacant == true)
-				isVacantInt = 1;
+			//beginTransaction()
 			
-			//Date sqlNow = new Date(new java.util.Date().getTime());
-			PreparedStatement updateStatement = getConnection().prepareStatement(sql);
-			updateStatement.setBoolean(1, isVacant);
-			//updateStatement.setDate(2, sqlNow);
-			updateStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-			updateStatement.setInt(3, spotId);
-			int count = updateStatement.executeUpdate();
-			if (count == 0)
-				throw new Exception("ParkingSpotId " + spotId + " is not inserted in the database.");
+			updateParkingSpotVacancy(spotId, isVacant);
+			
+			SensorLog logItem = new SensorLog();
+			logItem.setNewIsVacant(isVacant);
+			logItem.setSensorId(spotId);
+			insertSensorLog(logItem);
+			
+			
+			//commitTransaction();
+			
 		}
 		finally
 		{
@@ -137,6 +140,48 @@ public class ParkingSpotController extends ControllerBase {
 		}
 		
 	}
+
+
+
+
+	private void updateParkingSpotVacancy(int spotId, boolean isVacant)
+			throws SQLException, Exception {
+		String sql = "Update parkingspot set isVacant = ?, LastUpdate = ? Where ParkingSpotId = ?";
+		//String sql = "Update parkingspot set isVacant = ? Where ParkingSpotId = ?";
+		
+		byte isVacantInt = 0;
+		if (isVacant == true)
+			isVacantInt = 1;
+		
+		//Date sqlNow = new Date(new java.util.Date().getTime());
+		PreparedStatement updateStatement = getConnection().prepareStatement(sql);
+		updateStatement.setBoolean(1, isVacant);
+		//updateStatement.setDate(2, sqlNow);
+		updateStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+		updateStatement.setInt(3, spotId);
+		int count = updateStatement.executeUpdate();
+		if (count == 0)
+			throw new Exception("ParkingSpotId " + spotId + " is not inserted in the database.");
+	}
+	
+	
+	private void insertSensorLog(SensorLog model) throws Exception
+	{
+		String sql = "INSERT INTO `sensorlog` (`LogDate`, `SensorId`, `NewIsVacant`) VALUES (?, ?, ?);";
+
+		PreparedStatement updateStatement = getConnection().prepareStatement(sql);
+
+		updateStatement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+		updateStatement.setInt(2, model.getSensorId());
+		updateStatement.setBoolean(3, model.getNewIsVacant());
+
+		int count = updateStatement.executeUpdate();
+		if (count == 0)
+			throw new Exception("SensorLog.insert failed.");
+		
+	}
+	
+	
 	
 	
 //	
@@ -192,6 +237,10 @@ public class ParkingSpotController extends ControllerBase {
 			sb.append("\"lng\":").append(item.getLng());
 			sb.append(",");
 			sb.append("\"spotNumber\":").append(item.getSpotNumber());
+			sb.append(",");
+			sb.append("\"isVacant\":").append(item.getIsVacant());
+			sb.append(",");
+			sb.append("\"PermitLevelId\":").append(item.getPermitLevelId());
 			
 			sb.append("}");
 			

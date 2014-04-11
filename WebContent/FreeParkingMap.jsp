@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=windows-1256"
-    pageEncoding="windows-1256"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="utf-8" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,9 +8,10 @@
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuvAUEwdvrM4v49pnVIaWPNrUM_R9rpIw&sensor=true">
     </script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script> -->
     <!--  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>-->
-
+	
+	<script type="text/javascript" src="plugins/jquery/jquery.js"></script>
 
 
     <style type="text/css">

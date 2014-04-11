@@ -22,9 +22,9 @@ public class ParkingSpotControllerTest extends TestCase {
 			
 			ParkingSpot ps = da.getById(id);
 			assertEquals(id, ps.getParkingSpotId());
-			assertEquals(32.98709, ps.getLat());
-			assertEquals(-96.752503, ps.getLng());
-			assertEquals(100, ps.getSpotNumber());
+			assertEquals(32.986393, ps.getLat());
+			assertEquals(-96.753602, ps.getLng());
+			assertEquals(101, ps.getSpotNumber());
 			// and rest
 			
 		} catch (Exception e) {
@@ -79,6 +79,21 @@ public class ParkingSpotControllerTest extends TestCase {
 		}
 	}
 	
+	
+	//TODO: add test case for test SensorLog insert in getIsVacant
+	
+//	
+//	@Test
+//	public void testSetSpotIsVacantSensorLogInsert()
+//	{
+//		
+//	}
+//	
+	
+	
+	
+	
+	
 	@Test
 	public void testGetFreeSpacesList()
 	{
@@ -102,7 +117,7 @@ public class ParkingSpotControllerTest extends TestCase {
 	}
 	
 
-
+	//TODO: add test case for convertArrayListParkingSpaceToJson
 	
 	
 	

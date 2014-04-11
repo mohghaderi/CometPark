@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=windows-1256"
-    pageEncoding="windows-1256"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,8 +8,11 @@
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuvAUEwdvrM4v49pnVIaWPNrUM_R9rpIw&sensor=true">
     </script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script> -->
     <!--  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>-->
+	
+	<script type="text/javascript" src="plugins/jquery/jquery.js"></script>
 
 
 
@@ -17,6 +20,7 @@
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
       #map-canvas { height: 100% }
+      #mainBody { height: 100%; width:100%; }
       .iwContainer { 
 		  width: 120px; 
 		  height: 40px; 
@@ -28,21 +32,32 @@
     var map = null;
     var markersArray = [];
     var infoWindowsArray = [];
-    USGSOverlay.prototype = new google.maps.OverlayView();
+    ParkingLotAOverlay.prototype = new google.maps.OverlayView();
     
     
       function initialize() {
     	  console.log( "initialize" );
     	  
           //detectBrowser();
+          
+        // utdallas view
+        //var mapOptions = {
+        //  center: new google.maps.LatLng(32.985494,-96.750948),
+        //  zoom: 16
+        //};
+        
+        // parking A view 
         var mapOptions = {
-          center: new google.maps.LatLng(32.985494,-96.750948),
-          zoom: 16
+          center: new google.maps.LatLng(32.98606,-96.752914),
+          zoom: 20
         };
+        
         map = new google.maps.Map(document.getElementById("map-canvas"),
             mapOptions);
         
         OverlayParkingImage();
+        
+        showAllParkingSpots();
 
       }
       
@@ -50,39 +65,62 @@
     	  var useragent = navigator.userAgent;
     	  var mapdiv = document.getElementById("map-canvas");
 
-    	  if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 ) {
+    	  //if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 ) {
     	    mapdiv.style.width = '100%';
     	    mapdiv.style.height = '100%';
-    	  } else {
-    	    mapdiv.style.width = '600px';
-    	    mapdiv.style.height = '800px';
-    	  }
+    	  //} else {
+    	  //  mapdiv.style.width = '600px';
+    	  //  mapdiv.style.height = '800px';
+    	  //}
     	}
       
       function findFreeParkingSpaces() {
-    	  
+    	  //TODO: Performance can be increased by getting only updated results
+    	  //Avoided because this project is an educational one.
+    	  showAllParkingSpots();
+      }
+      
+      
+      function showAllParkingSpots() {
     	  //http://jquery-ui-map.googlecode.com/svn/trunk/demos/jquery-google-maps-json.html
-    	  $.getJSON( 'FreeParkingSpacesJsonView.jsp', showMarkers).done(function() {
-    		    console.log( "second success" );
+    	  $.getJSON( 'ParkingSpacesAllJsonView.jsp', showMarkers).done(function() {
+    		    console.log( "getAllParkingSpacesJson success" );
     	  })
     	  .fail(function() {
     	    console.log( "error" );
+    	    alert("error");
     	  })
     	  .always(function() {
     	    console.log( "complete" );
     	  });
-    	  
       }
+      
       
       function showMarkers(data) {
     	  
-    	  clearOverlays();
+    	if (areMarkersUpdatable(data)) {
+    		updateMarkers(data);
+		}
+    	else {
+    		clearMarkers();
+	    	createMarkers(data);
+    	}
+    	
+      }
+      
+      
+      
+      function areMarkersUpdatable(data) {
+    	  return data.markers.length == markersArray.length;
+    	  // TODO: add more advanced method such as checking id of parking spots
+      }
+      
+      function createMarkers(data) {
     	  
-    	 $.each( data.markers, function(i, mInfo) {
-    		  var myLatlng = new google.maps.LatLng(mInfo.lat,mInfo.lng);
+    	  $.each( data.markers, function(i, mInfo) {
+    		  //var myLatlng = new google.maps.LatLng(mInfo.lat,mInfo.lng);
     		  //var myLatlng = new google.maps.LatLng(32.985494,-96.750948);
-    		  
-    		  var color = '#00FF00';
+    		  var color = getVacancyColor(mInfo.isVacant);  
     		  
 			    var markerOptions = {
 			      strokeColor: color,
@@ -102,32 +140,36 @@
     		  //var marker = new google.maps.Circle(markerOptions);
     		  var marker = new google.maps.Rectangle(markerOptions);
     		  
-    		  
     		  markersArray.push(marker);
     		  
-    		  // DEVELOPER NOTE: Google Info BUG. It won't show small info windows; so, I defined iwContainer css class
-    		  var infoContent = "<div class='iwContainer'>Spot:" + mInfo.spotNumber + "</div>";
-    		  //var infoContent = "Spot:" + mInfo.spotNumber + "";
-    		  
-        	  var infowindow = new google.maps.InfoWindow({
-        	      content: infoContent
-        	  });
-        	  infoWindowsArray.push(infowindow);
-
-        	  google.maps.event.addListener(marker, 'click', function() {
-        		    infowindow.open(map,marker);
-        		    //TODO: close all other info windows
-        		    //for(var i = 0; i < infoWindowsArray.length; i++) {
-        		    //	infoWindowsArray[i].close();
-        		   	//}
-        		  });
-    		  
-    		  
-			}); 
+			});
       }
       
-   // Removes the overlays from the map, but keeps them in the array
-      function clearOverlays() {
+      function getVacancyColor(isVacant) {
+		  var color = '#00FF00'; // GREEN = not vacant color
+		  if (isVacant == false)
+			  color = '#FF0000';  // RED = vacant color
+		  return color;
+      }
+      
+      function updateMarkers(data) {
+    	  
+    	  $.each( data.markers, function(i, mInfo) {
+    		  var color = getVacancyColor(mInfo.isVacant);
+    		  if (markersArray[i].strokeColor != color)
+    		  {
+        		  markersArray[i].strokeColor = color;
+        		  markersArray[i].fillColor = color;
+        		  markersArray[i].setMap(null);
+        		  markersArray[i].setMap(map);
+    		  }
+			});
+      }
+      
+      
+            
+   // Removes the overlays from the map
+      function clearMarkers() {
 
 	    for (var i = 0; i < markersArray.length; i++) {
            markersArray[i].setMap(null);
@@ -139,23 +181,27 @@
    
    
    
+   // ************************** Overlay Parking Lot Image ********************************
+   // Used Google examples
+   
+   
    function OverlayParkingImage() {
-	   // The photograph is courtesy of the U.S. Geological Survey.
-	   var srcImage = 'images/ParkingLot2.jpg';
+	   
+	   var srcImage = 'images/ParkingLot3.jpg';
 	   
 	   
 	   var swBound = new google.maps.LatLng(32.98574, -96.753686);
 	   var neBound = new google.maps.LatLng(32.986432, -96.752150);
 	   var bounds = new google.maps.LatLngBounds(swBound, neBound);
 	   
-	   // The custom USGSOverlay object contains the USGS image,
+	   // The custom ParkingLotAOverlay object contains the ParkingLotA image,
 	   // the bounds of the image, and a reference to the map.
-	   overlay = new USGSOverlay(bounds, srcImage, map);
+	   overlay = new ParkingLotAOverlay(bounds, srcImage, map);
    }
    
 
    /** @constructor */
-   function USGSOverlay(bounds, image, map) {
+   function ParkingLotAOverlay(bounds, image, map) {
 
      // Initialize all properties.
      this.bounds_ = bounds;
@@ -175,7 +221,7 @@
     * onAdd is called when the map's panes are ready and the overlay has been
     * added to the map.
     */
-   USGSOverlay.prototype.onAdd = function() {
+   ParkingLotAOverlay.prototype.onAdd = function() {
 
      var div = document.createElement('div');
      div.id = "parkigLotOverlay";
@@ -198,7 +244,7 @@
      panes.overlayLayer.appendChild(div);
    };
 
-   USGSOverlay.prototype.draw = function() {
+   ParkingLotAOverlay.prototype.draw = function() {
 
      // We use the south-west and north-east
      // coordinates of the overlay to peg it to the correct position and size.
@@ -221,7 +267,7 @@
 
    // The onRemove() method will be called automatically from the API if
    // we ever set the overlay's map property to 'null'.
-   USGSOverlay.prototype.onRemove = function() {
+   ParkingLotAOverlay.prototype.onRemove = function() {
      this.div_.parentNode.removeChild(this.div_);
      this.div_ = null;
    };
@@ -234,7 +280,9 @@
     </script>
   </head>
   <body>
-  	<div><button onclick="findFreeParkingSpaces()">Find free parking spots</button></div>
-    <div id="map-canvas"></div>
+  	<div id="mainBody">
+	  	<div><button onclick="findFreeParkingSpaces()">Find free parking spots</button></div>
+	    <div id="map-canvas"></div>
+  	</div>
   </body>
 </html>

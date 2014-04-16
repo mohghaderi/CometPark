@@ -5,21 +5,20 @@
 
 
 <%! 
-	public String alertComponent = "";
 
-	public void showAlert(boolean success, String msg) {
+	public String createAlert(boolean success, String msg) {
 		
 		if (success == true)
-			alertComponent += "<div class=\"alert alert-success\">" + msg + "</div>";
+			return "<div class=\"alert alert-success\">" + msg + "</div>";
 		else
-			alertComponent += "<div class=\"alert alert-danger\">" + msg + "</div>";		
+			return "<div class=\"alert alert-danger\">" + msg + "</div>";		
 	}
 
 %>
 
 
 <%
-	alertComponent = "";
+	String alertComponent = "";
 	Controller model = new Controller();
 
 	String ControllerIDString = request.getParameter("ControllerId");
@@ -42,11 +41,11 @@
 			model.setLng(Double.parseDouble(request.getParameter("Lng")));
 			
 			ctrl.insert(model);
-			showAlert(true, "Information inserted successfully!");
+			alertComponent += createAlert(true, "Information inserted successfully!");
 		}
 		catch (Exception ex)
 		{
-			showAlert(false, ex.getMessage());
+			alertComponent += createAlert(false, ex.getMessage());
 			ex.printStackTrace();
 		}
 		

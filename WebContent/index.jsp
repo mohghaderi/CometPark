@@ -13,8 +13,9 @@
     <!--  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>-->
 	
 	<script type="text/javascript" src="plugins/jquery/jquery.js"></script>
-
-
+	<script type="text/javascript" src="plugins/jquery/jquery-ui-custom.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="themes/redmond/jquery-ui-1.8.2.custom.css" />
 
     <style type="text/css">
       html { height: 100% }
@@ -32,6 +33,7 @@
     var map = null;
     var markersArray = [];
     var infoWindowsArray = [];
+    var updateTimer = null;
     ParkingLotAOverlay.prototype = new google.maps.OverlayView();
     
     
@@ -58,7 +60,15 @@
         OverlayParkingImage();
         
         showAllParkingSpots();
-
+        startUpdateTimer();
+      }
+      
+      function startUpdateTimer() {
+    	  updateTimer = setInterval( function () {findFreeParkingSpaces();}, 1000); // update every one second
+      }
+      
+      function stopUpdateTimer() {
+    	  clearInterval(updateTimer);
       }
       
       function detectBrowser() {
@@ -85,10 +95,17 @@
     	  //http://jquery-ui-map.googlecode.com/svn/trunk/demos/jquery-google-maps-json.html
     	  $.getJSON( 'ParkingSpacesAllJsonView.jsp', showMarkers).done(function() {
     		    console.log( "getAllParkingSpacesJson success" );
+    		    $("#dialog-modal").dialog('close'); // automatically closes the error dialog! (TODO: don't close it if it is not exists)
     	  })
     	  .fail(function() {
     	    console.log( "error" );
-    	    alert("error");
+    	    //stopUpdateTimer();  //TODO: Stop the timer and let the user to start it again.
+    	    $( "#dialog-modal" ).dialog({
+    	        closeOnEscape: false,
+    	        open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog || ui).hide(); },
+    	        height: 140,
+    	        modal: true
+    	      });
     	  })
     	  .always(function() {
     	    console.log( "complete" );
@@ -272,17 +289,19 @@
      this.div_ = null;
    };
    
-   
-   
-      
+         
       google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
   </head>
   <body>
   	<div id="mainBody">
-	  	<div><button onclick="findFreeParkingSpaces()">Find free parking spots</button></div>
+  		<button onclick="findFreeParkingSpaces();" style="display:none">Find free parking spots</button>
 	    <div id="map-canvas"></div>
   	</div>
+  	<div id="dialog-modal" title="Error">
+	  <p>Error in getting data from the server. Please try again later. 
+	  </p>
+	</div>
   </body>
 </html>
